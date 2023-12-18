@@ -1,6 +1,6 @@
 namespace Escuela.Models;
 
-public class Couse
+public class Course
 {
     public int Id { get; set; }
     public string Description { get; set; }

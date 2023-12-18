@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "X:\\Estudio\\Escuela\\Escuela\\Escuela.csproj": {}
+    "x:\\Estudio\\Escuela\\Escuela\\Escuela.csproj": {}
   },
   "projects": {
-    "X:\\Estudio\\Escuela\\Escuela\\Escuela.csproj": {
+    "x:\\Estudio\\Escuela\\Escuela\\Escuela.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "X:\\Estudio\\Escuela\\Escuela\\Escuela.csproj",
+        "projectUniqueName": "x:\\Estudio\\Escuela\\Escuela\\Escuela.csproj",
         "projectName": "Escuela",
-        "projectPath": "X:\\Estudio\\Escuela\\Escuela\\Escuela.csproj",
+        "projectPath": "x:\\Estudio\\Escuela\\Escuela\\Escuela.csproj",
         "packagesPath": "C:\\Users\\jpavon\\.nuget\\packages\\",
-        "outputPath": "X:\\Estudio\\Escuela\\Escuela\\obj\\",
+        "outputPath": "x:\\Estudio\\Escuela\\Escuela\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

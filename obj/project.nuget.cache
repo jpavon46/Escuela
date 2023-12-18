@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fcHkbs2c5AqMV6NPzhFyeQLko8U0XpvvY2OZJ5+qCg/bCAbJYTLILWYWn2qdrHlFb8iVKKpgYUkNWu4qi4qHmA==",
+  "dgSpecHash": "EWKx7yNQzW059TBG9rPcI0kPUyIq3Gb4sSD86h6ihyQiEU0BgjVGMBzhT38ekKycbybst0BkxZX/SlLpKBlGiQ==",
   "success": true,
-  "projectFilePath": "X:\\Estudio\\Escuela\\Escuela\\Escuela.csproj",
+  "projectFilePath": "x:\\Estudio\\Escuela\\Escuela\\Escuela.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jpavon\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\jpavon\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

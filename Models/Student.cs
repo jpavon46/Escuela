@@ -1,4 +1,5 @@
 namespace Escuela.Models;
+using Escuela.Models;
 
 public class Student
 {
