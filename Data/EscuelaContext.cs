@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Escuela.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Escuela.Data
 {
-    public class EscuelaContext : DbContext
+    public class EscuelaContext : IdentityDbContext
     {
         public EscuelaContext (DbContextOptions<EscuelaContext> options)
             : base(options)

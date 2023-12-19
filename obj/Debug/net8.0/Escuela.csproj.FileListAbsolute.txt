@@ -253,3 +253,6 @@ X:\Estudio\Escuela\Escuela\obj\Debug\net8.0\refint\Escuela.dll
 X:\Estudio\Escuela\Escuela\obj\Debug\net8.0\Escuela.pdb
 X:\Estudio\Escuela\Escuela\obj\Debug\net8.0\Escuela.genruntimeconfig.cache
 X:\Estudio\Escuela\Escuela\obj\Debug\net8.0\ref\Escuela.dll
+X:\Estudio\Escuela\Escuela\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+X:\Estudio\Escuela\Escuela\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
+X:\Estudio\Escuela\Escuela\obj\Debug\net8.0\Escuela.MvcApplicationPartsAssemblyInfo.cs
