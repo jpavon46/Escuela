@@ -5,7 +5,6 @@ using Escuela.Data;
 
 public interface IUsersService
 {
-
     List<IdentityUser> GetAll();
     Task<IdentityUser?> findId(string? id);
     UserManager<IdentityUser> getManager();

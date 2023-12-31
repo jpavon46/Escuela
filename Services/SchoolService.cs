@@ -30,12 +30,12 @@ public class SchoolService : ISchoolService
         if (!string.IsNullOrEmpty(filter))
         {
             return _context.School
-                .Include(a => a.Teacher)
+                .Include(a => a.Teachers)
                 .Where(a => a.Name.ToLower().Contains(filter.ToLower()) || a.Address.ToLower().Contains(filter.ToLower())).ToList();
         }
 
         return _context.School
-               .Include(a => a.Teacher).ToList();
+               .Include(a => a.Teachers).ToList();
     }
 
     public void Update(School obj, int id)
@@ -52,7 +52,7 @@ public class SchoolService : ISchoolService
 
     public async Task<School?> GetById(int? id)
     {
-        var schoolTask = await _context.School.Include(a => a.Teacher).FirstOrDefaultAsync(m => m.Id == id);
+        var schoolTask = await _context.School.Include(a => a.Teachers).FirstOrDefaultAsync(m => m.Id == id);
 
         return schoolTask;
     }

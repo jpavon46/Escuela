@@ -7,50 +7,48 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Escuela.Data;
 using Escuela.Models;
+using Escuela.Services;
+using Microsoft.AspNetCore.Authorization;
+using Escuela.ViewModels;
 
 namespace Escuela.Controllers
 {
     public class CourseController : Controller
     {
-        private readonly EscuelaContext _context;
+        private ICourseService _courseService;
 
-        public CourseController(EscuelaContext context)
+        public CourseController(ICourseService courseService)
         {
-            _context = context;
+            _courseService = courseService;
         }
 
         // GET: Course
-        public async Task<IActionResult> Index()
+        [Authorize]
+        public async Task<IActionResult> Index(string? filter)
         {
-            var escuelaContext = _context.Course.Include(c => c.Student).Include(c => c.Teacher);
-            return View(await escuelaContext.ToListAsync());
+            var courses = _courseService.GetAll(filter);
+
+            var viewModel = new CourseViewModel();
+            viewModel.Courses = courses;
+
+            return View(viewModel);
         }
 
         // GET: Course/Details/5
+        [Authorize(Roles = "senior,semisenior,junior")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var course = await _context.Course
-                .Include(c => c.Student)
-                .Include(c => c.Teacher)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            return View(course);
+            var courseDetail = await _courseService.GetById(id);
+            return View(courseDetail);
         }
 
         // GET: Course/Create
+        [Authorize(Roles = "senior,semisenior")]
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.Set<Student>(), "Id", "Id");
-            ViewData["TeacherId"] = new SelectList(_context.Set<Teacher>(), "Id", "Id");
+            var availableTeachers = _courseService.getContext().Teacher.Where(d => d.IsAvailable);
+            ViewData["TeacherId"] = new SelectList(availableTeachers, "Id", "Id");
+            ViewData["StudentId"] = new SelectList(_courseService.getContext().Student, "Id", "Id");
             return View();
         }
 
@@ -59,34 +57,30 @@ namespace Escuela.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "senior,semisenior")]
         public async Task<IActionResult> Create([Bind("Id,Description,TeacherId,StudentId")] Course course)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(course);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["StudentId"] = new SelectList(_context.Set<Student>(), "Id", "Id", course.StudentId);
-            ViewData["TeacherId"] = new SelectList(_context.Set<Teacher>(), "Id", "Id", course.TeacherId);
-            return View(course);
+            _courseService.Create(course);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Course/Edit/5
+        [Authorize(Roles = "senior,semisenior,junior")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null || _courseService.getContext().Course == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.Course.FindAsync(id);
+            var course = await _courseService.GetById(id);
             if (course == null)
             {
                 return NotFound();
             }
-            ViewData["StudentId"] = new SelectList(_context.Set<Student>(), "Id", "Id", course.StudentId);
-            ViewData["TeacherId"] = new SelectList(_context.Set<Teacher>(), "Id", "Id", course.TeacherId);
+             var availableTeachers = _courseService.getContext().Teacher.Where(d => d.IsAvailable);
+            ViewData["TeacherId"] = new SelectList(availableTeachers, "Id", "Name");
+            ViewData["StudentId"] = new SelectList(_courseService.getContext().Student, "Id", "Name", course.StudentId);
             return View(course);
         }
 
@@ -95,6 +89,7 @@ namespace Escuela.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "senior,semisenior,junior")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,TeacherId,StudentId")] Course course)
         {
             if (id != course.Id)
@@ -102,43 +97,21 @@ namespace Escuela.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(course);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CourseExists(course.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["StudentId"] = new SelectList(_context.Set<Student>(), "Id", "Id", course.StudentId);
-            ViewData["TeacherId"] = new SelectList(_context.Set<Teacher>(), "Id", "Id", course.TeacherId);
-            return View(course);
+            _courseService.Update(course,id);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Course/Delete/5
+        [Authorize(Roles = "senior")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || _courseService.getContext().Course == null)
             {
                 return NotFound();
             }
 
-            var course = await _context.Course
-                .Include(c => c.Student)
-                .Include(c => c.Teacher)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var course = await _courseService.GetById(id);
+
             if (course == null)
             {
                 return NotFound();
@@ -150,21 +123,34 @@ namespace Escuela.Controllers
         // POST: Course/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "senior")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Course.FindAsync(id);
-            if (course != null)
+            if (_courseService.getContext().Course == null)
             {
-                _context.Course.Remove(course);
+                return Problem("Entity set 'EscuelaContext.Course'  is null.");
             }
 
-            await _context.SaveChangesAsync();
+            var course = await _courseService.GetById(id);
+            if (course != null)
+            {
+                _courseService.Delete(course);
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 
         private bool CourseExists(int id)
         {
-            return _context.Course.Any(e => e.Id == id);
+            return (_courseService.getContext().Course?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [Authorize(Roles = "senior")]
+        public IActionResult DeleteAllStudentCourses() {
+
+            ViewData["StudentId"] = new SelectList(_courseService.getContext().Student.Where(a => a.Courses.Count != 0), "Id", "Name");
+
+            return View();
         }
     }
 }

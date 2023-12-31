@@ -1,0 +1,26 @@
+@model Escuela.ViewModels.StudentsDeleteAllCoursesViewModel;
+
+<body>
+    <h1>Borra todos los cursos del Estudiante</h1>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="DeleteAllStudentCourses">
+                <div class="form-group">
+                    <label class="control-label">Paciente</label>
+                    <select asp-for="StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
+                </div>
+                <br/>
+                <div class="form-group">
+                    <input type="submit" value="Borrar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div>
+        <a asp-action="Index">Volver</a>
+    </div>
+</body>
+</html>

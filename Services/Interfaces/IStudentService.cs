@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Escuela.Data;
 
 public interface IStudentService {
+    EscuelaContext getContext();
     void Create(Student obj);
     List<Student> GetAll(string? filter);
     void Update(Student obj, int id);
     void Delete(Student obj);
     Task<Student?> GetById(int? id);
-    EscuelaContext getContext();
 }
